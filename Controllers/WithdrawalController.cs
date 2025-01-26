@@ -54,7 +54,7 @@ public class WithdrawalController : ControllerBase
 
         var verificacaoDeToken = _authService.VerifyToken(token);
 
-        if (!arrayDeDiasParaSaque.Contains(todayDay) || !arrayDeMesesParaSaque.Contains(todayMonth) && verificacaoDeToken != "Admin")
+        if ((!arrayDeDiasParaSaque.Contains(todayDay) || !arrayDeMesesParaSaque.Contains(todayMonth)) && verificacaoDeToken != "Admin")
         {
             throw new InvalidOperationException($"Hoje não é um dia permitido para saque. {token}");
         }

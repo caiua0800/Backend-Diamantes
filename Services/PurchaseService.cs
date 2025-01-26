@@ -311,6 +311,14 @@ namespace DotnetBackend.Services
 
             existingPurchase.CurrentIncome += increasement;
 
+            if (existingPurchase.FirstIncreasement == null)
+            {
+                TimeZoneInfo brtZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+                DateTime currentBrasiliaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, brtZone);
+                existingPurchase.FirstIncreasement = currentBrasiliaTime;
+                existingPurchase.LastIncreasement = currentBrasiliaTime;
+            }
+
             var extract = new Extract($"Antecipação de lucro do contrato {purchaseId} no valor de R${increasement}", increasement, existingPurchase.ClientId);
             await _extractService.CreateExtractAsync(extract);
 

@@ -197,19 +197,22 @@ namespace DotnetBackend.Controllers
 
                         if (purchase.Status == 2)
                         {
-                            TimeSpan? difference = purchase.EndContractDate - purchase.FirstIncreasement;
+                            var chosenDate = purchase.FirstIncreasement != null ? purchase.FirstIncreasement : purchase.PurchaseDate;
+                            TimeSpan? difference = purchase.EndContractDate - chosenDate;
 
-                            if (difference.HasValue && difference.Value.TotalDays > 0)
-                            {
-                                decimal aux = (purchase.FinalIncome - purchase.CurrentIncome) / (decimal)Math.Ceiling(difference.Value.TotalDays);
-                                dailyIncome += aux;
-
-                                dailyIncomes.Add(new IncomeByPurchase(purchase.PurchaseId, aux, purchase.CurrentIncome));
-                            }
-                            else
-                            {
-                                Console.WriteLine("A data de término do contrato deve ser posterior à data do primeiro incremento.");
-                            }
+                            decimal aux = (purchase.FinalIncome - purchase.CurrentIncome) / (decimal)Math.Ceiling(difference.Value.TotalDays);
+                            dailyIncome += aux;
+                            dailyIncomes.Add(new IncomeByPurchase(purchase.PurchaseId, aux, purchase.CurrentIncome));
+                            // if (difference.HasValue && difference.Value.TotalDays > 0)
+                            // {
+                            //     decimal aux = (purchase.FinalIncome - purchase.CurrentIncome) / (decimal)Math.Ceiling(difference.Value.TotalDays);
+                            //     dailyIncome += aux;
+                            //     dailyIncomes.Add(new IncomeByPurchase(purchase.PurchaseId, aux, purchase.CurrentIncome));
+                            // }
+                            // else
+                            // {
+                            //     Console.WriteLine("A data de término do contrato deve ser posterior à data do primeiro incremento.");
+                            // }
                         }
                     }
                 }
