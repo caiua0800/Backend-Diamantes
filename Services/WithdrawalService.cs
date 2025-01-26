@@ -115,7 +115,7 @@ public class WithdrawalService
             stringExtrato += aiaiPapai + "-";
         }
 
-        var extract = new Extract($"Saque da Carteira, retirada de ${stringExtrato}", (decimal)withdrawal.AmountWithdrawn, withdrawal.ClientId);
+        var extract = new Extract($"Saque da Carteira, retirada de {stringExtrato}", (decimal)withdrawal.AmountWithdrawn, withdrawal.ClientId);
         await _extractService.CreateExtractAsync(extract);
         await _clientService.AddWithdrawalAsync(withdrawal.ClientId, withdrawal.WithdrawalId);
         await _withdrawals.InsertOneAsync(withdrawal);

@@ -129,7 +129,7 @@ namespace DotnetBackend.Services
             }
 
             await _purchases.InsertOneAsync(purchase);
-            var extract = new Extract($"Compra {purchase.ProductName}", purchase.TotalPrice, purchase.ClientId);
+            var extract = new Extract($"Compra {purchase.ProductName}, ID %{purchase.PurchaseId}%", purchase.TotalPrice, purchase.ClientId);
             Console.WriteLine($"Compra {purchase.ProductName}");
             await _extractService.CreateExtractAsync(extract);
             await _clientService.AddPurchaseAsync(purchase.ClientId, purchase.PurchaseId);
@@ -324,7 +324,7 @@ namespace DotnetBackend.Services
                 existingPurchase.LastIncreasement = currentBrasiliaTime;
             }
 
-            var extract = new Extract($"Antecipação de lucro do contrato {purchaseId} no valor de R${increasement}", increasement, existingPurchase.ClientId);
+            var extract = new Extract($"Antecipação de lucro do contrato %{purchaseId}% no valor de R${increasement}", increasement, existingPurchase.ClientId);
             await _extractService.CreateExtractAsync(extract);
 
             await _clientService.AddToBalanceAsync(existingPurchase.ClientId, increasement);
@@ -413,7 +413,7 @@ namespace DotnetBackend.Services
             await _purchases.UpdateOneAsync(p => p.PurchaseId == purchaseId, updateDefinition);
             Console.WriteLine($"Compra com ID {purchaseId} atualizada com sucesso.");
 
-            var extract = new Extract($"Incremento no contrato {purchaseId} de R${amount}", amount, existingClient.Id);
+            var extract = new Extract($"Incremento no contrato %{purchaseId}% de R${amount}", amount, existingClient.Id);
             await _extractService.CreateExtractAsync(extract);
             Console.WriteLine($"Extrato criado para o cliente {existingClient.Id}.");
 
@@ -558,7 +558,7 @@ namespace DotnetBackend.Services
                 await _clientService.WithdrawFromBalanceAsync(existingPurchase.ClientId, existingPurchase.TotalPrice);
                 await _clientService.WithdrawFromBlockedBalanceAsync(existingPurchase.ClientId, existingPurchase.TotalPrice);
                 Console.WriteLine($"Saldo do cliente {existingPurchase.ClientId} decrementado no valor de {existingPurchase.TotalPrice}");
-                var extract = new Extract($"Contrato #{purchaseId} cancelado.", existingPurchase.TotalPrice, existingPurchase.ClientId);
+                var extract = new Extract($"Contrato %{purchaseId}% cancelado.", existingPurchase.TotalPrice, existingPurchase.ClientId);
                 await _extractService.CreateExtractAsync(extract);
                 return true;
             }
