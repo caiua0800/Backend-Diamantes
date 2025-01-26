@@ -35,7 +35,7 @@ namespace DotnetBackend.Services
             purchase.PurchaseId = "A" + await _counterService.GetNextSequenceAsync("purchases");
             var contractId = "Model" + purchase.Type;
             var contract = await _contractService.GetContractByIdAsync(contractId);
-            Client client = await _clientService.GetClientByIdAsync(purchase.ClientId);
+            Client? client = await _clientService.GetClientByIdAsync(purchase.ClientId);
 
             decimal value;
             string descrip;
@@ -54,7 +54,7 @@ namespace DotnetBackend.Services
                 {
                     gain = purchase.PercentageProfit;
                 }
-                else if (client.ClientProfit > 0)
+                else if (client?.ClientProfit > 0)
                 {
                     gain = (double)client.ClientProfit;
                 }
@@ -101,7 +101,6 @@ namespace DotnetBackend.Services
                 var jsonContent = JsonSerializer.Serialize(requestPayload);
                 var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                // HttpResponseMessage response = await httpClient.PostAsync("http://servidoroscar.modelodesoftwae.com:3030/pix", httpContent);
                 HttpResponseMessage response = await httpClient.PostAsync("http://localhost:4040/pix", httpContent);
 
 
@@ -119,7 +118,13 @@ namespace DotnetBackend.Services
                 }
                 else
                 {
-                    throw new Exception($"Falha na requisição PIX: {response.ReasonPhrase}");
+
+                    purchase.TicketPayment = null;
+                    purchase.QrCode = null;
+                    purchase.QrCodeBase64 = null;
+                    purchase.TicketId = null;
+                    purchase.ExpirationDate = null;
+                    // throw new Exception($"Falha na requisição PIX: {response.ReasonPhrase}");
                 }
             }
 
