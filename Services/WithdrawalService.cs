@@ -28,7 +28,7 @@ public class WithdrawalService
         _systemConfigService = systemConfigService;
     }
 
-    public async Task<Withdrawal> CreateWithdrawalAsync(Withdrawal withdrawal)
+    public async Task<Withdrawal> CreateWithdrawalAsync(Withdrawal withdrawal, bool isAdmin)
     {
 
         if (withdrawal.DateCreated == null)
@@ -87,7 +87,7 @@ public class WithdrawalService
                         }
                         DateTime dataLimite = DateTime.Now.AddDays(-diasPraSacarVal);
 
-                        if ((purchase.FirstIncreasement.HasValue && purchase.FirstIncreasement < dataLimite) || (bool)purchase.FreeWithdraw)
+                        if ((purchase.FirstIncreasement.HasValue && purchase.FirstIncreasement < dataLimite) || (bool)purchase.FreeWithdraw || isAdmin)
                         {
                             if ((purchase.CurrentIncome - purchase.AmountWithdrawn) >= valorASerRetirado)
                             {
@@ -131,7 +131,7 @@ public class WithdrawalService
 
     public async Task<List<Withdrawal>> GetAllWithdrawalsAsync()
     {
-        return await _withdrawals.Find(_ => true).ToListAsync(); // Retorna todos os saques
+        return await _withdrawals.Find(_ => true).ToListAsync();
     }
 
     public async Task<List<Withdrawal>> GetAllWithdrawalsFilteredAsync(int dateFilter)
@@ -159,7 +159,7 @@ public class WithdrawalService
         if (saqueEncontrado == null)
         {
             Console.WriteLine($"Withdrawal with ID {normalizedId} not found.");
-            return false; // Saque não encontrado, retorna falso
+            return false;
         }
 
         var deleteResult = await _withdrawals.DeleteOneAsync(w => w.WithdrawalId == normalizedId);
@@ -175,10 +175,6 @@ public class WithdrawalService
         {
             try
             {
-                // if (newStatus == 2)
-                // {
-                //     await _bankAccountService.WithdrawFromBalanceAsync(withdrawalId, (decimal)existingWithdrawal.AmountWithdrawn);
-                // }
 
                 if (newStatus == 3)
                 {

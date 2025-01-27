@@ -68,7 +68,7 @@ public class WithdrawalController : ControllerBase
         if (verificacaoDeToken == "Admin")
             Console.WriteLine("Saque permitido somente por ser admin.");
 
-        var createdWithdrawal = await _withdrawalService.CreateWithdrawalAsync(withdrawal);
+        var createdWithdrawal = await _withdrawalService.CreateWithdrawalAsync(withdrawal, verificacaoDeToken == "Admin");
 
         if (string.IsNullOrEmpty(createdWithdrawal.WithdrawalId))
         {
