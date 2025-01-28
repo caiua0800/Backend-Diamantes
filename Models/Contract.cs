@@ -29,6 +29,9 @@ public class ContractModel
     [BsonElement("description")]
     public string Description { get; set; }
 
+    [BsonElement("min")]
+    public int? Min { get; set; }
+
     [BsonElement("imageUrl")]
     public string? ImageUrl { get; set; }
 

@@ -46,8 +46,8 @@ public class SystemConfigService
             return null;
         }
 
-        if (existingConfig.Value == newValue)
-            return null;
+        // if (existingConfig.Value == newValue)
+        //     return null;
 
         existingConfig.LastValue = existingConfig.Value;
         existingConfig.Value = newValue;
