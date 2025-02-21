@@ -113,7 +113,8 @@ namespace DotnetBackend.Services
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
                 expiration = token.ValidTo,
-                platformId = platformId // Retorna o PlatformId no resultado do token
+                platformId = platformId,
+                isAdmin = role == "Admin"
             });
         }
 

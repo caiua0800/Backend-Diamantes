@@ -19,7 +19,7 @@ namespace DotnetBackend.Controllers
         [HttpPost("token")]
         public async Task<IActionResult> GenerateToken([FromBody] UserLogin login)
         {
-            return await _authService.GenerateTokenAsync(login); // Delegando a chamada para o AuthService
+            return await _authService.GenerateTokenAsync(login);
         }
 
         [HttpGet("verify/{token}")]
